@@ -60,13 +60,11 @@ Next, clone libWB library:
 
 And then compile it: 
 
-  `module load cuda/12.4.0`
-
   `cd libwb; make; cd ..`
 
 ### Retrieving Assignments ###
 
-To retrieve (or update) released assignments, go to your ece408git folder and run the following:
+To retrieve (or update) released assignments, go to your ece408git folder (`cd; cd ece408git`) and run the following:
 
   `git fetch release`
 
