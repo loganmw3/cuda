@@ -1,5 +1,5 @@
 OBJ=lab1
-LIBWBPATH=../libwb
+LIBWBPATH=/projects/bche/labs/libwb
 
 all:
 	nvcc -std=c++11 -arch=sm_86 -I $(LIBWBPATH) -rdc=true -c $(OBJ).cu -o $(OBJ).o 
