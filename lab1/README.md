@@ -56,7 +56,6 @@ Here is a copy of job.slrum for lab1.
 #SBATCH -t 00:01:00
 
 module reset
-module load cuda/12.4
 
 echo -e "job $SLURM_JOBID is starting on `hostname`\n\n"
 
