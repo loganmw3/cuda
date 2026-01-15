@@ -30,7 +30,7 @@ Instructions about where to place each part of the code is demarcated by the //@
 
 ## Running the code using slurm
 
-For basic usage of slurm to compile and run the code, refer to the instructions in [lab0](https://github.com/illinois-cs-coursework/sp25_ece408_.release/tree/main/lab0#to-compile-and-execute-your-program). Here we give a slightly more detailed introduction to slurm, including an explanation for the job.slurm file and other useful commands.
+For basic usage of slurm to compile and run the code, refer to the instructions in [lab0](https://github.com/illinois-cs-coursework/sp26_ece408_.release/tree/main/lab0#to-compile-and-execute-your-program). Here we give a slightly more detailed introduction to slurm, including an explanation for the job.slurm file and other useful commands.
 
 Delta cluster uses [slurm](https://slurm.schedmd.com/documentation.html) to manage GPU/CPU resources. Slurm is an open-source and scalable system for cluster management and job scheduling, which is widely used in high-performance clusters all over the world.
 
