@@ -46,22 +46,6 @@ Also, make sure to configure your repository. This is needed by the auto-grader 
 
   `git config user.email "NetID@illinois.edu"`
 
-### Adding libWB library to your repository ###
-
-Our lab assignments rely on a special library, called libWB, for testing your code. Therefore, you need to install this library into your repository folder so it can be found by the compiler when compiling your code.
-
-First, go to your ece408git folder: 
-
-  `cd; cd ece408git` 
-
-Next, clone libWB library: 
-
-  `git clone https://github.com/abduld/libwb.git`
-
-And then compile it: 
-
-  `cd libwb; make; cd ..`
-
 ### Retrieving Assignments ###
 
 To retrieve (or update) released assignments, go to your ece408git folder (`cd; cd ece408git`) and run the following:
