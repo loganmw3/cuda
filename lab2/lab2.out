@@ -1,33 +1,161 @@
-job 15733690 is starting on gpub002.delta.ncsa.illinois.edu
+job 15747259 is starting on gpub001.delta.ncsa.illinois.edu
 
 
+
+memcheck tests:
+========= COMPUTE-SANITIZER
 The dimensions of A are 64 x 64
 The dimensions of B are 64 x 64
 Solution is correct
+========= ERROR SUMMARY: 0 errors
+========= COMPUTE-SANITIZER
 The dimensions of A are 128 x 64
 The dimensions of B are 64 x 128
 Solution is correct
+========= ERROR SUMMARY: 0 errors
+========= COMPUTE-SANITIZER
 The dimensions of A are 100 x 128
 The dimensions of B are 128 x 56
 Solution is correct
+========= ERROR SUMMARY: 0 errors
+========= COMPUTE-SANITIZER
 The dimensions of A are 128 x 64
 The dimensions of B are 64 x 128
 Solution is correct
+========= ERROR SUMMARY: 0 errors
+========= COMPUTE-SANITIZER
 The dimensions of A are 32 x 128
 The dimensions of B are 128 x 32
 Solution is correct
+========= ERROR SUMMARY: 0 errors
+========= COMPUTE-SANITIZER
 The dimensions of A are 200 x 100
 The dimensions of B are 100 x 256
 Solution is correct
+========= ERROR SUMMARY: 0 errors
+========= COMPUTE-SANITIZER
 The dimensions of A are 256 x 256
 The dimensions of B are 256 x 256
 Solution is correct
+========= ERROR SUMMARY: 0 errors
+========= COMPUTE-SANITIZER
 The dimensions of A are 256 x 300
 The dimensions of B are 300 x 256
 Solution is correct
+========= ERROR SUMMARY: 0 errors
+========= COMPUTE-SANITIZER
 The dimensions of A are 64 x 128
 The dimensions of B are 128 x 64
 Solution is correct
+========= ERROR SUMMARY: 0 errors
+========= COMPUTE-SANITIZER
 The dimensions of A are 256 x 256
 The dimensions of B are 256 x 257
 Solution is correct
+========= ERROR SUMMARY: 0 errors
+
+initcheck tests:
+========= COMPUTE-SANITIZER
+The dimensions of A are 64 x 64
+The dimensions of B are 64 x 64
+Solution is correct
+========= ERROR SUMMARY: 0 errors
+========= COMPUTE-SANITIZER
+The dimensions of A are 128 x 64
+The dimensions of B are 64 x 128
+Solution is correct
+========= ERROR SUMMARY: 0 errors
+========= COMPUTE-SANITIZER
+The dimensions of A are 100 x 128
+The dimensions of B are 128 x 56
+Solution is correct
+========= ERROR SUMMARY: 0 errors
+========= COMPUTE-SANITIZER
+The dimensions of A are 128 x 64
+The dimensions of B are 64 x 128
+Solution is correct
+========= ERROR SUMMARY: 0 errors
+========= COMPUTE-SANITIZER
+The dimensions of A are 32 x 128
+The dimensions of B are 128 x 32
+Solution is correct
+========= ERROR SUMMARY: 0 errors
+========= COMPUTE-SANITIZER
+The dimensions of A are 200 x 100
+The dimensions of B are 100 x 256
+Solution is correct
+========= ERROR SUMMARY: 0 errors
+========= COMPUTE-SANITIZER
+The dimensions of A are 256 x 256
+The dimensions of B are 256 x 256
+Solution is correct
+========= ERROR SUMMARY: 0 errors
+========= COMPUTE-SANITIZER
+The dimensions of A are 256 x 300
+The dimensions of B are 300 x 256
+Solution is correct
+========= ERROR SUMMARY: 0 errors
+========= COMPUTE-SANITIZER
+The dimensions of A are 64 x 128
+The dimensions of B are 128 x 64
+Solution is correct
+========= ERROR SUMMARY: 0 errors
+========= COMPUTE-SANITIZER
+The dimensions of A are 256 x 256
+The dimensions of B are 256 x 257
+Solution is correct
+========= ERROR SUMMARY: 0 errors
+
+synccheck tests:
+========= COMPUTE-SANITIZER
+The dimensions of A are 64 x 64
+The dimensions of B are 64 x 64
+Solution is correct
+========= ERROR SUMMARY: 0 errors
+========= COMPUTE-SANITIZER
+The dimensions of A are 128 x 64
+The dimensions of B are 64 x 128
+Solution is correct
+========= ERROR SUMMARY: 0 errors
+========= COMPUTE-SANITIZER
+The dimensions of A are 100 x 128
+The dimensions of B are 128 x 56
+Solution is correct
+========= ERROR SUMMARY: 0 errors
+========= COMPUTE-SANITIZER
+The dimensions of A are 128 x 64
+The dimensions of B are 64 x 128
+Solution is correct
+========= ERROR SUMMARY: 0 errors
+========= COMPUTE-SANITIZER
+The dimensions of A are 32 x 128
+The dimensions of B are 128 x 32
+Solution is correct
+========= ERROR SUMMARY: 0 errors
+========= COMPUTE-SANITIZER
+The dimensions of A are 200 x 100
+The dimensions of B are 100 x 256
+Solution is correct
+========= ERROR SUMMARY: 0 errors
+========= COMPUTE-SANITIZER
+The dimensions of A are 256 x 256
+The dimensions of B are 256 x 256
+Solution is correct
+========= ERROR SUMMARY: 0 errors
+========= COMPUTE-SANITIZER
+The dimensions of A are 256 x 300
+The dimensions of B are 300 x 256
+Solution is correct
+========= ERROR SUMMARY: 0 errors
+========= COMPUTE-SANITIZER
+The dimensions of A are 64 x 128
+The dimensions of B are 128 x 64
+Solution is correct
+========= ERROR SUMMARY: 0 errors
+========= COMPUTE-SANITIZER
+The dimensions of A are 256 x 256
+The dimensions of B are 256 x 257
+Solution is correct
+========= ERROR SUMMARY: 0 errors
+
+all tests completed.

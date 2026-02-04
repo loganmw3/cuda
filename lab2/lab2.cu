@@ -21,12 +21,12 @@ __global__ void matrixMultiply(float *A, float *B, float *C, int numARows,
   int x_index = blockDim.x * blockIdx.x + threadIdx.x;
   int y_index = blockDim.y * blockIdx.y + threadIdx.y;
   float accum = 0.0;
-  if(x_index < numARows && y_index < numBColumns){
+  if(x_index < numCRows && y_index < numCColumns){
     for(int i=0; i<numAColumns; i++){
       accum += A[x_index * numAColumns + i] * B[i * numBColumns + y_index];
     }
+    C[x_index * numCColumns + y_index] = accum;
   }
-  C[x_index * numCColumns + y_index] = accum;
 }
 
 
@@ -47,10 +47,8 @@ int main(int argc, char **argv) {
   args = wbArg_read(argc, argv);
 
   //@@ Importing data and creating memory on host
-  hostA = (float *)wbImport(wbArg_getInputFile(args, 0), &numARows,
-                            &numAColumns);
-  hostB = (float *)wbImport(wbArg_getInputFile(args, 1), &numBRows,
-                            &numBColumns);
+  hostA = (float *)wbImport(wbArg_getInputFile(args, 0), &numARows, &numAColumns);
+  hostB = (float *)wbImport(wbArg_getInputFile(args, 1), &numBRows, &numBColumns);
   wbLog(TRACE, "The dimensions of A are ", numARows, " x ", numAColumns);
   wbLog(TRACE, "The dimensions of B are ", numBRows, " x ", numBColumns);
 
