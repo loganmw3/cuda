@@ -1,4 +1,4 @@
-OBJ=lab2
+OBJ=lab3
 LIBWBPATH=/projects/bche/labs/libwb
 DEBUG_FLAGS = -g -G 
 
@@ -24,10 +24,12 @@ rundebug:
 
 
 runall:
+	make clean
 	make all
 	make run
 
 make rundebugall:
+	make clean
 	make all
 	make debug
 	make rundebug
