@@ -18,3 +18,19 @@ cleanall: clean
 
 run:
 	sbatch job.slurm
+
+rundebug:
+	sbatch job_sanitizer.slurm
+
+
+runall:
+	make clean
+	make all
+	make run
+
+make rundebugall:
+	make clean
+	make all
+	make debug
+	make rundebug
+
