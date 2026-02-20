@@ -27,7 +27,6 @@ __global__ void conv3d(float *input, float *output, const int z_size,
   
   // __shared__ float N_ds [SHARED_WIDTH][SHARED_WIDTH][SHARED_WIDTH];
   __shared__ float N_ds[TILE_WIDTH + MASK_WIDTH - 1][TILE_WIDTH + MASK_WIDTH - 1][TILE_WIDTH + MASK_WIDTH - 1];
-  float accum = 0.0f;
   
   int tx = threadIdx.x;
   int ty = threadIdx.y;
@@ -57,6 +56,7 @@ __global__ void conv3d(float *input, float *output, const int z_size,
   }
   __syncthreads();
 
+  float accum = 0.0f;
   if (tz < TILE_WIDTH && ty < TILE_WIDTH && tx < TILE_WIDTH) {
     for (int i=0; i<MASK_WIDTH; i++) {
       for (int j=0; j<MASK_WIDTH; j++) {
@@ -120,7 +120,7 @@ int main(int argc, char *argv[]) {
   // Recall that the first three elements of hostInput are dimensions and
   // do
   // not need to be copied to the gpu
-  cudaMemcpyToSymbol(Mc, hostKernel, kernelLength * sizeof(float));
+  cudaMemcpyToSymbol(Mc, hostKernel, kernelLength * sizeof(float), 0, cudaMemcpyHostToDevice);
   cudaMemcpy(deviceInput, (hostInput + 3), (inputLength - 3) * sizeof(float), cudaMemcpyHostToDevice);
 
 
