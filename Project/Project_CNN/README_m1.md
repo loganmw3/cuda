@@ -1,7 +1,7 @@
 # Project Milestone 1: Convolution Implementation - CPU and GPU
-***Deadline: October 10th, 2025 8PM***
+***Deadline: March 6th, 2026 8PM***
 
-The 3-day grace period also applies to project milestones. Please check [Canvas](https://canvas.illinois.edu/courses/60979) for our grace period policy.
+The 3-day grace period also applies to project milestones. Please check [Canvas](https://canvas.illinois.edu/courses/66336) for our grace period policy.
 
 The table below contains all of the deliverables.
 
@@ -125,51 +125,13 @@ Modify `m1_gpu.slurm` to run with batch_size=100. Run
     srun ./m1_gpu 100 > m1_gpu.out
 
 to run the code specified in `./project/src/layer/custom/new-forward.cu` program for a batch of 100 input images.
-If your implementation is correct, it will show the same correctness as the CPU implementation. You should see output like this:
+If your implementation is correct, it will show the same correctness as the CPU implementation.
 
-    Test batch size: 100
-    Loading fashion-mnist data...Done
-    Loading model...Done
-    Conv-GPU (Conv1: 1→4 channels, 7x7)==
-    Layer Time: 7.9413 ms
-    Op Time: 0.208621 ms
-    Throughput: 12592.4 images/sec
-    Conv-GPU (Conv2: 4→16 channels, 7x7)==
-    Layer Time: 6.14167 ms
-    Op Time: 0.474358 ms
-    Throughput: 16282.2 images/sec
-
-    Test Accuracy: 0.86
-
-The file `m1_gpu.out` includes three performance metrics. "Op time" refers to the time taken by `conv_forward_gpu`. "Layer time" represents the total duration of `conv_forward_gpu_prolog`, `conv_forward_gpu`, and `conv_forward_gpu_epilog` combined. "Throughput" shows images processed per second based on Op Time.
+The file `m1_gpu.out` includes two performance metrics. "Op time" refers to the time taken by `conv_forward_gpu`. "Layer time" represents the total duration of `conv_forward_gpu_prolog`, `conv_forward_gpu`, and `conv_forward_gpu_epilog` combined.
 
 The sum of Op times on batch_size=10000 should be approximately 70 ms if you implement the basic kernel from Lecture 11 correctly. You must have correct accuracies and total Op time less than 300 ms to earn full credits on the coding part.
 
 `m1_gpu.slurm` will run your code in a single A40 GPU. If you use a different GPU model (such as your personal GPU), the first run may be slower due to JIT caching. For more information, refer to the [Appendix: JIT Caching](#jit-caching).
-
-### Visualizing Feature Maps
-
-Once you have a working GPU implementation, you can visualize the feature maps produced by each layer of the network. This can help you verify that your convolution is producing reasonable outputs and understand how the network processes an image.
-
-To generate a visualization, run:
-
-    sbatch viz.slurm
-
-This will:
-1. Run a forward pass on a single test image and dump the intermediate tensors to `feature_maps/`
-2. Generate a self-contained `feature_maps.html` file you can download and then open in a browser
-
-By default, `viz.slurm` visualizes test image #0. To visualize a different image, modify `viz.slurm` and change the argument:
-
-    srun ./viz 42          # visualize test image #42
-    srun python3 visualize.py feature_maps/
-
-You can also run these commands locally after building:
-
-    ./viz 42
-    python3 visualize.py feature_maps/
-
-**Note:** The visualizer uses your GPU convolution implementation (`new-forward.cu`).
 
 ### Specifying Batch Size
 
@@ -245,3 +207,18 @@ Optional reading: [CUDA Pro Tip: Understand Fat Binaries and JIT Caching](https:
 "Op time" refers to the time taken by `conv_forward_gpu`. "Layer time" represents the total duration of `conv_forward_gpu_prolog`, `conv_forward_gpu`, and `conv_forward_gpu_epilog` combined.
 
 To learn more about how these metrics are computed, please see the source code [conv_cust.cc](project/src/layer/conv_cust.cc)
+
+### Feature Map Visualization (Optional)
+
+You can also visualize intermediate feature maps for debugging:
+
+1. Submit `viz.slurm`:
+
+       sbatch viz.slurm
+
+2. This script runs:
+
+       srun ./viz 0
+       srun python3 visualize.py feature_maps/
+
+3. After the job finishes, `visualize.py` generates `feature_maps.html`, which shows the input, intermediate feature maps, FC activations, and softmax outputs.
