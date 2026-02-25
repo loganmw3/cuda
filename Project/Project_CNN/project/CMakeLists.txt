@@ -24,3 +24,6 @@ target_compile_options(m1_cpu PRIVATE "$<$<CONFIG:DEBUG>:-gdwarf-5>")
 
 add_executable(m1_gpu m1_gpu.cc "${PROJECT_SOURCE_DIR}/src/layer/custom/new-forward.cu")
 target_link_libraries(m1_gpu ece408net MiniDNNLib)
+
+add_executable(viz viz.cc "${PROJECT_SOURCE_DIR}/src/layer/custom/new-forward.cu")
+target_link_libraries(viz ece408net MiniDNNLib)

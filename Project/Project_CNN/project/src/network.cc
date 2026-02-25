@@ -1,4 +1,5 @@
 #include "./network.h"
+#include <sys/stat.h>
 
 void Network::forward(const Matrix& input) {
   if (layers.empty())
@@ -160,5 +161,38 @@ void Network::load_parameters(std::string filename) {
   }
   
   set_parameters(res);
+}
+
+static void write_bin(const std::string& path, const float* data, int n) {
+  std::ofstream out(path, std::ios::binary);
+  out.write(reinterpret_cast<const char*>(data), n * sizeof(float));
+}
+
+void Network::dump_feature_maps(const Matrix& input, const Matrix& labels,
+                                const std::string& output_dir, int image_idx) {
+  mkdir(output_dir.c_str(), 0755);
+
+  // Extract single image column and run forward pass
+  Matrix single = input.col(image_idx);
+  forward(single);
+
+  // Write input image
+  write_bin(output_dir + "/input.bin", single.data(), single.size());
+
+  // Write each layer output
+  for (int i = 0; i < (int)layers.size(); i++) {
+    const Matrix& out = layers[i]->output();
+    write_bin(output_dir + "/layer_" + std::to_string(i) + ".bin",
+              out.data(), out.size());
+  }
+
+  // Write metadata (ground-truth label and predicted class)
+  int true_label = (int)labels(0, image_idx);
+  Matrix::Index pred_idx;
+  layers.back()->output().col(0).maxCoeff(&pred_idx);
+
+  std::ofstream meta(output_dir + "/metadata.txt");
+  meta << "true_label=" << true_label << std::endl;
+  meta << "predicted=" << (int)pred_idx << std::endl;
 }
 

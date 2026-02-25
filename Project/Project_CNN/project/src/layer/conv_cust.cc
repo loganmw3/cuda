@@ -36,7 +36,9 @@ void Conv_Custom::forward(const Matrix& bottom) {
   float *y_d;
   float *k_d;
 
-  std::cout<<"Conv-GPU=="<<std::endl;
+  static int conv_layer_id = 0;
+  conv_layer_id++;
+  std::cout<<"Conv-GPU (Conv"<<conv_layer_id<<": "<<C<<"→"<<M<<" channels, "<<K<<"x"<<K<<")=="<<std::endl;
 
   // Launch marker kernel to aid with student function timing
   gpuUtils.insert_pre_barrier_kernel();
@@ -68,6 +70,7 @@ void Conv_Custom::forward(const Matrix& bottom) {
   
   std::chrono::duration<float, std::milli> duration_kernel = (end_time_kernel-start_time_kernel);
   std::cout<<"Op Time: " << duration_kernel.count() << " ms"<<std::endl;
+  std::cout<<"Throughput: " << n_sample / (duration_kernel.count() / 1000.0) << " images/sec"<<std::endl;
 }
 
 void Conv_Custom::backward(const Matrix& bottom, const Matrix& grad_top) {

@@ -35,3 +35,8 @@ if [ -e "cmake_install.cmake" ]; then
     echo "Removing cmake_install.cmaket file"
     rm -f "cmake_install.cmake"
 fi
+
+# Check if ./feature_maps directory exists, then remove it
+if [ -d "./feature_maps" ]; then
+    rm -rf "./feature_maps"
+fi

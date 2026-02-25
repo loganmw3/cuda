@@ -47,6 +47,8 @@ class Network {
                       int seed = -1);
   void save_parameters(std::string filename);
   void load_parameters(std::string filename);
+  void dump_feature_maps(const Matrix& input, const Matrix& labels,
+    const std::string& output_dir, int image_idx);
 };
 
 #endif  // SRC_NETWORK_H_
