@@ -116,3 +116,5 @@ NCSA/UIUC © 2020 [Carl Pearson](https://cwpearson.github.io)
 * Yifei Song
 * Shengjie Ma
 * Hrishi Shah
+* Yifei Li
+* Zhixiang Liang
