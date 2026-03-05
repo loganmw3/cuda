@@ -2,7 +2,6 @@
 #include <iostream>
 #include "gpu-new-forward.h"
 
-
 #define CUDA_CHECK(call)                                                   \
 {                                                                          \
     cudaError_t err = call;                                                \
@@ -39,18 +38,13 @@ __global__ void conv_forward_kernel(float *output, const float *input, const flo
     Width - input width dimension
     K - kernel height and width (K x K)
     */
-
+    // Constants & Shared Memory
     const int Height_out = Height - K + 1;
     const int Width_out = Width - K + 1;
     const int SHARED_WIDTH = TILE_WIDTH + K - 1;
     extern __shared__ float shared_mem[];
-    
-    
-    // We have some nice #defs for you below to simplify indexing. Feel free to use them, or create your own.
-    // An example use of these macros:
-    // float a = in_4d(0,0,0,0)
-    // out_4d(0,0,0,0) = a
-    
+
+    // Macros
     #define out_4d(i3, i2, i1, i0) output[(i3) * (Map_out * Height_out * Width_out) + (i2) * (Height_out * Width_out) + (i1) * (Width_out) + i0]
     #define in_4d(i3, i2, i1, i0) input[(i3) * (Channel * Height * Width) + (i2) * (Height * Width) + (i1) * (Width) + i0]
     #define mask_4d(i3, i2, i1, i0) mask[(i3) * (Channel * K * K) + (i2) * (K * K) + (i1) * (K) + i0]
@@ -58,31 +52,17 @@ __global__ void conv_forward_kernel(float *output, const float *input, const flo
     #define shared(r, c) shared_mem[(r) * SHARED_WIDTH + (c)]
 
     // Insert your GPU convolution kernel code here
-    // int tx = threadIdx.x;
-    // int ty = threadIdx.y;
-    // // int tz = threadIdx.z; // always 0 because of the way kernel was launched
-    // int bx = blockIdx.x;
-    // int by = blockIdx.y;
-    // int bz = blockIdx.z;
-    // int plane = bz;
-    // int cur_batch = plane / Map_out;
-    // int cur_map = plane % Map_out;
-    // int w_out = bx * TILE_WIDTH + tx;
-    // int h_out = by * TILE_WIDTH + ty;
-
-    int tx = threadIdx.x;
-    int ty = threadIdx.y;
+    int tx = threadIdx.x;   // Pixel X
+    int ty = threadIdx.y;   // Pixel Y
 
     int bx = blockIdx.x;   // flattened tile index
     int by = blockIdx.y;   // batch index
     int bz = blockIdx.z;   // map_out index
 
-    int plane = bz;        // keep the name, but plane is now just map_out
     int cur_batch = by;
-    int cur_map = plane;   // == bz
+    int cur_map = bz;
 
     int num_Width_Tiles = (Width_out + TILE_WIDTH - 1) / TILE_WIDTH;
-    // int num_Height_Tiles = (Height_out + TILE_WIDTH - 1) / TILE_WIDTH; // not strictly needed here
 
     int tile_x = bx % num_Width_Tiles;
     int tile_y = bx / num_Width_Tiles;
@@ -93,14 +73,12 @@ __global__ void conv_forward_kernel(float *output, const float *input, const flo
 
     float accumulator = 0.0f;
 
-    // const int R = K / 2;
     const int h_in0 = tile_y * TILE_WIDTH;
     const int w_in0 = tile_x * TILE_WIDTH;
 
+    // Loop over each Channel
     for(int c=0; c<Channel; ++c){
-      // const int h_in = h_in0 + ty;
-      // const int w_in = w_in0 + tx;
-
+      // Load into shared memory
       for (int r = ty; r < SHARED_WIDTH; r += blockDim.y) {
         for (int col = tx; col < SHARED_WIDTH; col += blockDim.x) {
           int h_in = h_in0 + r;
@@ -111,14 +89,9 @@ __global__ void conv_forward_kernel(float *output, const float *input, const flo
             shared(r, col) = 0.0f;
         }
       }
-
-      // if(w_out < Width && h_out < Height){
-      //   shared(ty, tx) = in_4d(cur_batch, c, h_in, w_in);
-      // } else {
-      //   shared(ty, tx) = 0.0f;
-      // }
       __syncthreads();
 
+      // Apply the mask
       if(tx < TILE_WIDTH && ty < TILE_WIDTH){
         if(h_out < Height_out && w_out < Width_out){
           for(int j=0; j<K; ++j){
@@ -130,7 +103,7 @@ __global__ void conv_forward_kernel(float *output, const float *input, const flo
       }
       __syncthreads();
     }
-
+    // Write back
     if (ty < TILE_WIDTH && tx < TILE_WIDTH) {
         if (h_out < Height_out && w_out < Width_out) {
             out_4d(cur_batch, cur_map, h_out, w_out) = accumulator;
@@ -148,18 +121,6 @@ __global__ void conv_forward_kernel(float *output, const float *input, const flo
 	
 __host__ void GPUInterface::conv_forward_gpu_prolog(const float *host_output, const float *host_input, const float *host_mask, float **device_output_ptr, float **device_input_ptr, float **device_mask_ptr, const int Batch, const int Map_out, const int Channel, const int Height, const int Width, const int K)
 {
-    // Allocate memory and copy over the relevant data structures to the GPU
-
-    // We pass double pointers for you to initialize the relevant device pointers,
-    //  which are passed to the other two functions.
-
-    // Useful snippet for error checking
-    // cudaError_t error = cudaGetLastError();
-    // if(error != cudaSuccess)
-    // {
-    //     std::cout<<"CUDA error: "<<cudaGetErrorString(error)<<std::endl;
-    //     exit(-1);
-    // }
     /*
     Function paramter definitions:
     output - output
@@ -175,8 +136,6 @@ __host__ void GPUInterface::conv_forward_gpu_prolog(const float *host_output, co
     // Constants
     const int Width_out = Width - K + 1;
     const int Height_out = Height - K + 1;
-    // const int Width_out = Width;
-    // const int Height_out = Height;
     const int input_size =  sizeof(float) * Batch * Height * Width * Channel;
     const int output_size = sizeof(float) * Batch * Map_out * Height_out * Width_out;
     const int mask_size =   sizeof(float) * (K*K) * Map_out * Channel;
@@ -198,23 +157,20 @@ __host__ void GPUInterface::conv_forward_gpu(float *device_output, const float *
     // Constants
     const int Width_out = Width - K + 1;
     const int Height_out = Height - K + 1;
-    // const int Width_out = Width;
-    // const int Height_out = Height;
     const int num_Width_Tiles = (Width_out + TILE_WIDTH - 1)/TILE_WIDTH;
     const int num_Height_Tiles = (Height_out + TILE_WIDTH -1)/TILE_WIDTH;
 
     // Set the kernel dimensions and call the kernel
     // Each threas should compute one output pixel (h, w) for one (b, m)
     dim3 threadsPerBlock(TILE_WIDTH, TILE_WIDTH, 1);
-    // grid.x = number of tiles across the output width
-    // grid.y = number of tiles across the output height
-    // grid.z = Batch x Map_out (Can recover these in the kernel)
+    // grid.x = number of tiles across the output width (Can recover x_tile and y_tile in the kernel)
+    // grid.y = Batch
+    // grid.z = Map_out
     dim3 blocksPerGrid(num_Width_Tiles * num_Height_Tiles, Batch, Map_out);
 
-    //Copy Mask to constant memory
+    //Copy Mask to constant memory (Device-To-Device)
     const int mask_size = Map_out * Channel * K * K * sizeof(float);
     CUDA_CHECK(cudaMemcpyToSymbol(constant_mem, device_mask, mask_size, 0, cudaMemcpyDeviceToDevice));
-
 
     int SHARED_WIDTH = TILE_WIDTH + K - 1;
     size_t sharedBytes = SHARED_WIDTH * SHARED_WIDTH * sizeof(float);
@@ -223,7 +179,7 @@ __host__ void GPUInterface::conv_forward_gpu(float *device_output, const float *
     conv_forward_kernel<<<blocksPerGrid, threadsPerBlock, sharedBytes>>>(device_output, device_input, device_mask, Batch, Map_out, Channel, Height, Width, K);
     CUDA_CHECK(cudaGetLastError());
 
-    cudaDeviceSynchronize();
+    // cudaDeviceSynchronize();
 }
 
 
@@ -232,17 +188,15 @@ __host__ void GPUInterface::conv_forward_gpu_epilog(float *host_output, float *d
     // Constants
     const int Width_out = Width - K + 1;
     const int Height_out = Height - K + 1;
-    // const int Width_out = Width;
-    // const int Height_out = Height;
     const int output_size = sizeof(float) * Batch * Map_out * Height_out * Width_out;
     
     // Copy the output back to host
     CUDA_CHECK(cudaMemcpy(host_output, device_output, output_size ,cudaMemcpyDeviceToHost));
 
     // Free device memory
-    cudaFree(device_input);
-    cudaFree(device_output);
-    cudaFree(device_mask);
+    CUDA_CHECK(cudaFree(device_input));
+    CUDA_CHECK(cudaFree(device_output));
+    CUDA_CHECK(cudaFree(device_mask));
 }
 
 
