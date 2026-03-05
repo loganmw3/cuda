@@ -12,7 +12,7 @@
     }                                                                      \
 }
 
-#define TILE_WIDTH 16
+#define TILE_WIDTH 8
 #define LARGEST_K 7
 #define LARGEST_CHANNEL 16
 #define LARGEST_MAP_OUT 16
