@@ -16,13 +16,14 @@ module reset
 
 echo -e "job $SLURM_JOBID is starting on `hostname`\n\n"
 
-srun ./lab5 -e data/0/output.raw -i data/0/input0.raw -o /tmp/myoutput.raw -t vector 
-srun ./lab5 -e data/1/output.raw -i data/1/input0.raw -o /tmp/myoutput.raw -t vector 
-srun ./lab5 -e data/2/output.raw -i data/2/input0.raw -o /tmp/myoutput.raw -t vector 
-srun ./lab5 -e data/3/output.raw -i data/3/input0.raw -o /tmp/myoutput.raw -t vector 
-srun ./lab5 -e data/4/output.raw -i data/4/input0.raw -o /tmp/myoutput.raw -t vector 
-srun ./lab5 -e data/5/output.raw -i data/5/input0.raw -o /tmp/myoutput.raw -t vector 
-srun ./lab5 -e data/6/output.raw -i data/6/input0.raw -o /tmp/myoutput.raw -t vector 
-srun ./lab5 -e data/7/output.raw -i data/7/input0.raw -o /tmp/myoutput.raw -t vector 
-srun ./lab5 -e data/8/output.raw -i data/8/input0.raw -o /tmp/myoutput.raw -t vector 
-srun ./lab5 -e data/9/output.raw -i data/9/input0.raw -o /tmp/myoutput.raw -t vector 
+srun ./lab5 -e data/0/output.ppm -i data/0/input.ppm -o /tmp/myoutput.raw -t image
+srun ./lab5 -e data/1/output.ppm -i data/1/input.ppm -o /tmp/myoutput.raw -t image
+srun ./lab5 -e data/2/output.ppm -i data/2/input.ppm -o /tmp/myoutput.raw -t image
+srun ./lab5 -e data/3/output.ppm -i data/3/input.ppm -o /tmp/myoutput.raw -t image
+srun ./lab5 -e data/4/output.ppm -i data/4/input.ppm -o /tmp/myoutput.raw -t image
+srun ./lab5 -e data/5/output.ppm -i data/5/input.ppm -o /tmp/myoutput.raw -t image
+srun ./lab5 -e data/6/output.ppm -i data/6/input.ppm -o /tmp/myoutput.raw -t image
+srun ./lab5 -e data/7/output.ppm -i data/7/input.ppm -o /tmp/myoutput.raw -t image
+srun ./lab5 -e data/8/output.ppm -i data/8/input.ppm -o /tmp/myoutput.raw -t image
+srun ./lab5 -e data/9/output.ppm -i data/9/input.ppm -o /tmp/myoutput.raw -t image
+

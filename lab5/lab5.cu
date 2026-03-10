@@ -1,86 +1,41 @@
-// MP5 Reduction
-// Input: A num list of length n
-// Output: Sum of the list = list[0] + list[1] + ... + list[n-1];
+// Histogram Equalization
 
 #include <wb.h>
 
-#define BLOCK_SIZE 512 //@@ This value is not fixed and you can adjust it according to the situation
+#define HISTOGRAM_LENGTH 256
 
-#define wbCheck(stmt)                                                     \
-  do {                                                                    \
-    cudaError_t err = stmt;                                               \
-    if (err != cudaSuccess) {                                             \
-      wbLog(ERROR, "Failed to run stmt ", #stmt);                         \
-      wbLog(ERROR, "Got CUDA error ...  ", cudaGetErrorString(err));      \
-      return -1;                                                          \
-    }                                                                     \
-  } while (0)
-  
-__global__ void total(float *input, float *output, int len) {
-  //@@ Load a segment of the input vector into shared memory
-  //@@ Traverse the reduction tree
-  //@@ Write the computed sum of the block to the output vector at the correct index
-}
+//@@ insert code here
 
 int main(int argc, char **argv) {
-  int ii;
   wbArg_t args;
-  float *hostInput;  // The input 1D list
-  float *hostOutput; // The output list
-  //@@ Initialize device input and output pointers
+  int imageWidth;
+  int imageHeight;
+  int imageChannels;
+  wbImage_t inputImage;
+  wbImage_t outputImage;
+  float *hostInputImageData;
+  float *hostOutputImageData;
+  const char *inputImageFile;
 
-  int numInputElements;  // number of elements in the input list
-  int numOutputElements; // number of elements in the output list
+  //@@ Insert more code here
 
-  args = wbArg_read(argc, argv);
+  args = wbArg_read(argc, argv); /* parse the input arguments */
+
+  inputImageFile = wbArg_getInputFile(args, 0);
 
   //Import data and create memory on host
-  hostInput =
-      (float *)wbImport(wbArg_getInputFile(args, 0), &numInputElements);
-
-  numOutputElements = numInputElements / (BLOCK_SIZE << 1);
-  if (numInputElements % (BLOCK_SIZE << 1)) {
-    numOutputElements++;
-  }
-  hostOutput = (float *)malloc(numOutputElements * sizeof(float));
-
-  // The number of input elements in the input is numInputElements
-  // The number of output elements in the input is numOutputElements
-
-  //@@ Allocate GPU memory
+  inputImage = wbImport(inputImageFile);
+  imageWidth = wbImage_getWidth(inputImage);
+  imageHeight = wbImage_getHeight(inputImage);
+  imageChannels = wbImage_getChannels(inputImage);
+  outputImage = wbImage_new(imageWidth, imageHeight, imageChannels);
 
 
-  //@@ Copy input memory to the GPU
+  //@@ insert code here
 
+  wbSolution(args, outputImage);
 
-  //@@ Initialize the grid and block dimensions here
-
-
-  //@@ Launch the GPU Kernel and perform CUDA computation
-
-  
-  cudaDeviceSynchronize();  
-  //@@ Copy the GPU output memory back to the CPU
-
-  
-  /********************************************************************
-   * Reduce output vector on the host
-   * NOTE: One could also perform the reduction of the output vector
-   * recursively and support any size input. 
-   * For simplicity, we do not require that for this lab.
-   ********************************************************************/
-  for (ii = 1; ii < numOutputElements; ii++) {
-    hostOutput[0] += hostOutput[ii];
-  }
-
-  //@@ Free the GPU memory
-
-
-
-  wbSolution(args, hostOutput, 1);
-
-  free(hostInput);
-  free(hostOutput);
+  //@@ insert code here
 
   return 0;
 }
