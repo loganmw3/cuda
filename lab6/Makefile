@@ -1,4 +1,4 @@
-OBJ=lab5
+OBJ=lab6
 LIBWBPATH=/projects/bche/labs/libwb
 DEBUG_FLAGS = -g -G 
 
