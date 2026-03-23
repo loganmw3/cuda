@@ -20,6 +20,29 @@ __global__ void total(float *input, float *output, int len) {
   //@@ Load a segment of the input vector into shared memory
   //@@ Traverse the reduction tree
   //@@ Write the computed sum of the block to the output vector at the correct index
+    __shared__ float partialSum[2 * BLOCK_SIZE];
+    unsigned int tx = threadIdx.x;
+    unsigned int segment = 2 * blockDim.x * blockIdx.x;
+    unsigned int i = segment + tx;
+    if (i < len){ 
+      partialSum[tx] = input[i];
+    }else{
+      partialSum[tx] = 0;
+    }
+
+    if (segment + blockDim.x + tx < len){
+      partialSum[blockDim.x + tx] = input[i + blockDim.x];
+    }else{
+      partialSum[blockDim.x + tx] = 0;
+    }
+
+    for (unsigned int stride = blockDim.x; stride >= 1; stride >>= 1) {
+      __syncthreads();
+      if (tx < stride)
+        partialSum[tx] += partialSum[tx + stride];
+    }
+    if (tx == 0)
+      output[blockIdx.x] = partialSum[0];
 }
 
 int main(int argc, char **argv) {
@@ -48,19 +71,27 @@ int main(int argc, char **argv) {
   // The number of output elements in the input is numOutputElements
 
   //@@ Allocate GPU memory
+  float* deviceInput;
+  float* deviceOutput;
 
+  cudaMalloc((void **)&deviceInput, numInputElements * sizeof(float));
+  cudaMalloc((void **)&deviceOutput, numOutputElements * sizeof(float));
 
   //@@ Copy input memory to the GPU
+  cudaMemcpy(deviceInput, hostInput, numInputElements * sizeof(float), cudaMemcpyHostToDevice);
 
 
   //@@ Initialize the grid and block dimensions here
-
+  dim3 blocksInGrid((numInputElements - 1) / BLOCK_SIZE + 1, 1, 1);
+  dim3 threadsPerBlock(BLOCK_SIZE, 1, 1);
 
   //@@ Launch the GPU Kernel and perform CUDA computation
+  total<<<blocksInGrid, threadsPerBlock>>>(deviceInput, deviceOutput, numInputElements);
 
   
   cudaDeviceSynchronize();  
   //@@ Copy the GPU output memory back to the CPU
+  cudaMemcpy(hostOutput, deviceOutput, numOutputElements * sizeof(float), cudaMemcpyDeviceToHost);
 
   
   /********************************************************************
@@ -74,6 +105,8 @@ int main(int argc, char **argv) {
   }
 
   //@@ Free the GPU memory
+  cudaFree(deviceInput);
+  cudaFree(deviceOutput);
 
 
 
