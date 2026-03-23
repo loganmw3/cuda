@@ -1,5 +1,4 @@
 # Milestone 2: Profiling Convolution and Implementing Kernel Fusion
-***Deadline: November 7th, 2025 8PM***
 
 In this second milestone, you will build upon the **basic CPU convolution and GPU convolution** you completed in Milestone 1. Your tasks now include implementing  **profiling** those implementations, matrix unrolling, and introducing a **kernel fusion** optimization for unrolling.
 
