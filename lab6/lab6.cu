@@ -82,7 +82,7 @@ int main(int argc, char **argv) {
 
 
   //@@ Initialize the grid and block dimensions here
-  dim3 blocksInGrid((numInputElements - 1) / BLOCK_SIZE + 1, 1, 1);
+  dim3 blocksInGrid(numOutputElements, 1, 1);
   dim3 threadsPerBlock(BLOCK_SIZE, 1, 1);
 
   //@@ Launch the GPU Kernel and perform CUDA computation
